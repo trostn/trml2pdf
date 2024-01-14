@@ -39,6 +39,14 @@ def _child_get(node, childs):
     return clds
 
 
+class PageReset(platypus.Flowable):
+    def draw(self):
+        self.canv._doPageReset = True
+
+# class PageNumber(platypus.Flowable):
+#     def draw(self):
+#         return self.canv.getPageNumber()
+
 class RmlFlowable(object):
 
     def __init__(self, doc):
@@ -178,6 +186,9 @@ class RmlFlowable(object):
                 height=utils.unit_get(node.getAttribute('length'))),
             'barCode': lambda node: code39.Extended39(self._textual(node)),
             'pageBreak': lambda node: platypus.PageBreak(),     # FIXME: it is not in RML std
+            'pageNumberReset': lambda node: PageReset(),
+            # 'pageNumber': lambda node: PageNumber(),
+            # 'pageNumber': lambda node: platypus.Paragraph(self._textual(node), self.styles.para_style_get(node), **(utils.attr_get(node, [], {'bulletText': 'str'}))),,
             'nextPage': lambda node: platypus.PageBreak(),
             'condPageBreak': lambda node: platypus.CondPageBreak(**(utils.attr_get(node, ['height']))),
             'setNextTemplate': lambda node: platypus.NextPageTemplate(str(node.getAttribute('name'))),
